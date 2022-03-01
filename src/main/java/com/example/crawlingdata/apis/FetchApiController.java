@@ -11,6 +11,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +23,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api")
 public class FetchApiController {
     
+    private WebDriver web;
+
+    public FetchApiController(WebDriver web) {
+        this.web = web;
+    }
 
     @GetMapping(value = {"", "/"})
     public String fetch() {
+        String url = "https://www.topcv.vn";
+        web.get(url);
         return "Hello world";
     }
 
