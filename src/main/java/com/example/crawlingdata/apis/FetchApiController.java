@@ -25,7 +25,7 @@ public class FetchApiController {
     }
 
     @GetMapping("/wiki/")
-    public ResponseEntity fetchDataFromWiki() {
+    public ResponseEntity<ArrayList<WikiItem>> fetchDataFromWiki() {
         ArrayList<WikiItem> results = new ArrayList<>();
         Document doc = null;
         try {
