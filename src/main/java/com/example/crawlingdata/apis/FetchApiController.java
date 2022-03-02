@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.crawlingdata.crawlers.TopCvSpider;
 import com.example.crawlingdata.repositories.JobRepository;
 import com.example.crawlingdata.responses.JobResponse;
 import com.example.crawlingdata.responses.models.JobItem;
@@ -17,7 +18,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,7 +29,7 @@ public class FetchApiController {
     
     private final String TOPCV = "https://www.topcv.vn";
     private final String FACEBOOK = "https://www.facebook.com";
-    ArrayList<JobItem> jobList;
+    List<? extends JobItem> jobList;
     private int jobsTotal = 0;
     private int pageSizeTopCv = 25;
     private WebDriver web;
@@ -119,6 +119,38 @@ public class FetchApiController {
     ) {
         System.out.println("findJob invoked");
         List<JobItem> jobList = getAllJobsFrom(url, jobName);
+        JobResponse response = new JobResponse();
+        
+        if (jobList == null || jobList.size() == 0) {
+            response.setStatus(200);
+            response.setMessage("No data for the query");
+        } 
+        else {
+            response.setStatus(200);
+            response.setMessage("Get successfully");
+            int totalPage = jobsTotal / pageSizeTopCv;
+            response.setTotal(totalPage % 2 == 0 ? totalPage : totalPage + 1);
+            response.setData(jobList);
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/find-job-v3")
+    public ResponseEntity<Object> findAllJobsV3(
+        @RequestParam(required = false) String keyword,
+        @RequestParam(required = false) String location,
+        @RequestParam(required = false) String category,
+        @RequestParam(required = false) String companyField,
+        @RequestParam(required = false) String position,
+        @RequestParam(required = false) String salary
+    ) {
+        System.out.println("findAllJobsV3 invoked");
+        // List<JobItem> jobList = getAllJobsFrom(url, jobName);
+
+        TopCvSpider spider = new TopCvSpider(jobRepo);
+        var formattedUrl = spider.formatUrl(keyword, location, category, companyField, position, 0, 0);
+        System.out.println(formattedUrl);
+        jobList = spider.crawl();
         JobResponse response = new JobResponse();
         
         if (jobList == null || jobList.size() == 0) {
