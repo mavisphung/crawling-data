@@ -19,5 +19,7 @@ public class JobResponse {
     
     private int status;
     private String message;
+    private int total;
+    private String next;
     private Object data;
 }

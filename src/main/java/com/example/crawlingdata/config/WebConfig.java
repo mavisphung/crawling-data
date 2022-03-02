@@ -1,7 +1,11 @@
 package com.example.crawlingdata.config;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,7 +13,11 @@ import org.springframework.context.annotation.Configuration;
 public class WebConfig {
     
     @Bean
-    public WebDriver webDriver() {
-        return new EdgeDriver();
+    public WebDriver webDriver() throws MalformedURLException {
+        EdgeOptions edgeOptions = new EdgeOptions();
+        edgeOptions.setHeadless(true);
+        WebDriver webDriver = new RemoteWebDriver(new URL("http://localhost:4444"), edgeOptions);
+        // return new EdgeDriver();
+        return webDriver;
     }
 }
