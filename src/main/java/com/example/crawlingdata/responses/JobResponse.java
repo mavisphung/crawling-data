@@ -19,4 +19,5 @@ public class JobResponse {
     private int total;
     private String next;
     private Object data;
+    private String from;
 }

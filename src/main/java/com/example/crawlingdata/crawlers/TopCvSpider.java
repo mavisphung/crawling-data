@@ -1,5 +1,7 @@
 package com.example.crawlingdata.crawlers;
 
+import com.example.crawlingdata.repositories.CategoryRepository;
+import com.example.crawlingdata.repositories.CityRepository;
 import com.example.crawlingdata.repositories.JobRepository;
 import com.example.crawlingdata.responses.models.JobItem;
 import com.example.crawlingdata.util.TopCvData;
@@ -8,16 +10,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
+@Getter
+@Setter
 public class TopCvSpider extends Crawler {
     private JobRepository jobRepo;
-
+    private CategoryRepository cateRepo;
+    private CityRepository cityRepo;
     public TopCvSpider(String keyword, String jobCategory, String companyField, int minSalary, int maxSalary, String location, int minimumExperience, int position, int workType) {
         super("https://www.topcv.vn", keyword, jobCategory, companyField, minSalary, maxSalary, location, minimumExperience, position, workType);
     }
@@ -58,13 +64,17 @@ public class TopCvSpider extends Crawler {
             keywordPart = "moi-nhat";
         }
         if (location != null) {
-            var locationId = 1;
-            locationPart = "-tai-" + location.replaceAll("\\s+", "-");
-            filters.put("2", locationId);
+            var formattedLocation = location.replaceAll("\\s+", "-");
+            System.out.println(formattedLocation);
+            var city = cityRepo.findByAliasContaining(formattedLocation);
+            System.out.println("City: " + city.getAlias());
+            locationPart = "-tai-" + city.getAlias().replaceAll("\\s+", "-");
+            filters.put("2", city.getId());
         }
         if (category != null && !category.isBlank()) {
-            var cateogryId = 10026;
-            filters.put("3", cateogryId);
+            var categoryObject = cateRepo.findById(Integer.parseInt(category));
+            filters.put("3", categoryObject.get().getId());
+            System.out.println("Category: " + categoryObject.get().getId());
         }
         if (workType != null && !workType.isBlank()) {
             var workTypeId = 1;
@@ -107,46 +117,43 @@ public class TopCvSpider extends Crawler {
     public List<? extends JobItem> crawl() {
         String formatUrl = getBaseUrl() + formatUrl(super.getKeyword(), super.getLocation(), super.getWorkType() + "", super.getJobCategory(), super.getCompanyField(), super.getPosition() + "", getMinSalary(), getMaxSalary(), 1);
         System.out.println("Url: " + formatUrl);
-        Document initDocument = null;
-        Pattern numberPattern = Pattern.compile("[0-9]+");
-        List<JobItem> jobItems = null;
+        // Pattern numberPattern = Pattern.compile("[0-9]+");
+        List<JobItem> jobItems = new ArrayList<>();
 
-        if (initDocument == null) {
-            Document firstPageResult = null;
-            try {
-                firstPageResult = Jsoup.connect(formatUrl + "?page=0").get();
+        Document firstPageResult = null;
+        try {
+            firstPageResult = Jsoup.connect(formatUrl + "?page=0").get();
 
-                Elements totalJobsElement = firstPageResult.body().select(TopCvData.JOBS_TOTAL);
-                String text = totalJobsElement.first().text();
-
-                int totalPage = 0;
-                int totalJobs = 0;
-                int counter = 1;
-                if (numberPattern.matcher(text).matches()) {
-                    totalJobs = Integer.parseInt(text);
-                    totalPage = totalJobs % TopCvData.JOBS_IN_PAGE > 0 ? totalJobs / TopCvData.JOBS_IN_PAGE + 1 : totalJobs / TopCvData.JOBS_IN_PAGE;
-                    while (counter < totalPage) {
-                        Elements select = firstPageResult.body().select(".job-item");
-                        for (Element e : select) {
-                            String jobName = e.select(TopCvData.JOB_TITLE).text();
-                            String companyName = e.select(TopCvData.COMPANY).text();
-                            int remainDays = Integer.parseInt(e.select(TopCvData.DEADLINE).text());
-                            String salary = e.select(TopCvData.SALARY).text();
-                            String updateTime = e.select(TopCvData.TIME).text();
-                            jobItems = jobItems == null ? new ArrayList<>() : jobItems;
-                            jobItems.add(new JobItem(jobName, companyName, "", remainDays, getLocation(), salary, updateTime));
-                        }
-                        counter = counter + 1;
-                        firstPageResult = Jsoup.connect(formatUrl + "?page=" + counter).get();
-                    }
-                    System.out.println("total jobs: " + jobItems.size());
-                    return jobItems;
-                } else {
-                    return null;
+            Elements totalJobsElement = firstPageResult.body().select(TopCvData.JOBS_TOTAL);
+            String text = totalJobsElement.first().text();
+            int totalJobs = Integer.parseInt(text.replace(",", ""));
+            int totalPage = 0;
+            int counter = 1;
+            totalPage = totalJobs % TopCvData.JOBS_IN_PAGE > 0 ? totalJobs / TopCvData.JOBS_IN_PAGE + 1 : totalJobs / TopCvData.JOBS_IN_PAGE;
+            System.out.println("Total page: " + totalPage);
+            System.out.println("-------------------------------------------------------------");
+            while (counter <= totalPage) {
+                Elements select = firstPageResult.body().select(".job-item");
+                for (Element e : select) {
+                    String jobName = e.select(TopCvData.JOB_TITLE).first().text();
+                    String companyName = e.select(TopCvData.COMPANY).first().text();
+                    int remainDays = Integer.parseInt(e.select(TopCvData.DEADLINE).first().text());
+                    String salary = e.select(TopCvData.SALARY).first().text();
+                    String updateTime = e.select(TopCvData.TIME).first().text();
+                    String logo = e.select(TopCvData.LOGO).first().attr("src");
+                    String location = e.select(TopCvData.LOCATION).first().text();
+                    jobItems.add(new JobItem(jobName, companyName, logo, remainDays, location, salary, updateTime));
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Crawling page: " + counter + " | " + "Jobs per page: " + select.size());
+                counter = counter + 1;
+                firstPageResult = Jsoup.connect(formatUrl + "?page=" + counter).get();
             }
+            System.out.println("total jobs: " + jobItems.size());
+            
+            return jobRepo.saveAllAndFlush(jobItems);
+            // return jobItems;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

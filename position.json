@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "title": "Nhân viên"
+  },
+  {
+    "id": 2,
+    "title": "Trưởng nhóm"
+  },
+  {
+    "id": 3,
+    "title": "Trưởng/Phó phòng"
+  },
+  {
+    "id": 10,
+    "title": "Quản lý / Giám sát"
+  },
+  {
+    "id": 20,
+    "title": "Trưởng chi nhánh"
+  },
+  {
+    "id": 25,
+    "title": "Phó giám đốc"
+  },
+  {
+    "id": 30,
+    "title": "Giám đốc"
+  },
+  {
+    "id": 50,
+    "title": "Thực tập sinh"
+  }
+]
