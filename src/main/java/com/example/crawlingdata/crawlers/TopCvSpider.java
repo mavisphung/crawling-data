@@ -1,128 +1,156 @@
 package com.example.crawlingdata.crawlers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.example.crawlingdata.repositories.JobRepository;
 import com.example.crawlingdata.responses.models.JobItem;
 import com.example.crawlingdata.util.TopCvData;
-import com.example.crawlingdata.util.UrlBuilder;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class TopCvSpider extends Crawler implements UrlBuilder {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
-    private int pageSizeTopCv;
-
+public class TopCvSpider extends Crawler {
     private JobRepository jobRepo;
-    public TopCvSpider(JobRepository jobRepo) {
-        this.jobRepo = jobRepo;
-        this.pageSizeTopCv = 25;
-        super.setBaseUrl("https://www.topcv.vn/tim-viec-lam-");
+
+    public TopCvSpider(String keyword, String jobCategory, String companyField, int minSalary, int maxSalary, String location, int minimumExperience, int position, int workType) {
+        super("https://www.topcv.vn", keyword, jobCategory, companyField, minSalary, maxSalary, location, minimumExperience, position, workType);
     }
 
     @Override
-    public String formatUrl(
-        String keyword, 
-        String location, 
-        String category, 
-        String companyField,
-        String position,
-        double fromSalary, 
-        double toSalary
-    ) {
-        // https://www.topcv.vn/tim-viec-lam-[java]-<tai-[ho-chi-minh]>-<kl2c[10026]t1>?[salary=3]&[company_field=33]&[position=1]&[page=0]
-        //                                   keyword      location           category    salary      companyField       position
-        StringBuilder sb = new StringBuilder(super.getBaseUrl());
-        if (keyword != null && !keyword.isBlank())
-            sb.append(genKeyword(keyword));
+    public String formatUrl(String keyword, String location, String workType, String category, String companyField, String position, double fromSalary, double toSalary, int pageNum) {
+        var keywordPart = "";
+        var locationPart = "";
+        var filterNotationsPart = "";
+        Map<String, Object> filters = new HashMap<>();
+        filters.put("1", null); // k <=> 1
+        filters.put("2", null); // l <=> 2
+        filters.put("3", null); // c <=> 3
+        filters.put("4", null); // t <=> 4
+        if (keyword != null && !keyword.isBlank()) {
+            keywordPart = keyword.toLowerCase().replaceAll("\\s+", "-");
+            filters.put("1", true);
+        } else if (category != null && !category.isBlank()) {
+            keywordPart = category.replaceAll("\\s+", "-");
+        } else if (workType != null && workType.isBlank()) {
+            switch (workType) {
+                case "full-time": {
+                    keywordPart = "toan-thoi-gian";
+                    break;
+                }
+                case "part-time": {
+                    keywordPart = "ban-thoi-gian";
+                    break;
+                }
+                case "fresher": {
+                    keywordPart = "thuc-tap";
+                    break;
+                }
+            }
+        }
 
-        if (location != null && !location.isBlank())
-            sb.append(genLocation(location));
-        
-        if (category != null && !category.isBlank())
-            sb.append(genCategory(category));
-        
-        super.setBaseUrl(sb.toString());
-        return super.getBaseUrl();
+        if (keywordPart == "") {
+            keywordPart = "moi-nhat";
+        }
+        if (location != null) {
+            var locationId = 1;
+            locationPart = "-tai-" + location.replaceAll("\\s+", "-");
+            filters.put("2", locationId);
+        }
+        if (category != null && !category.isBlank()) {
+            var cateogryId = 10026;
+            filters.put("3", cateogryId);
+        }
+        if (workType != null && !category.isBlank()) {
+            var workTypeId = 1;
+            filters.put("4", workTypeId);
+        }
+
+        if (filters.get("2") != null || filters.get("3") != null || filters.get("4") != null) {
+            filterNotationsPart = "-";
+        }
+
+        for (String key : filters.keySet()) {
+            if (key.equals("1")) {
+                if (!filterNotationsPart.isBlank() && filters.get("1") != null) {
+                    filterNotationsPart += "k";
+                    System.out.println("KKKKK:  " + filterNotationsPart);
+                }
+            } else {
+                if (filters.get(key) != null) {
+                    switch (key) {
+                        case "4":
+                            filterNotationsPart += "t" + filters.get(key);
+                            break;
+                        case "2":
+                            filterNotationsPart += "l" + filters.get(key);
+                            break;
+                        case "3":
+                            filterNotationsPart += "c" + filters.get(key);
+                            break;
+                    }
+                }
+            }
+            System.out.println(filterNotationsPart);
+        }
+        var url = "/tim-viec-lam-" + keywordPart + locationPart + filterNotationsPart;
+
+        return url;
     }
 
     @Override
     public List<? extends JobItem> crawl() {
-        var jobs = new ArrayList<JobItem>();
-        Document doc = null;
-        int currentPage = 0;
-        int jobsTotal = 0;
-        try {
-            doc = Jsoup.connect(super.getBaseUrl() + "?page=" + currentPage).get();
-            jobsTotal = Integer.parseInt(doc.select(TopCvData.JOBS_TOTAL).first().text());
-        } catch (Exception e) {
-            // System.out.println(e.getMessage());
-            // e.printStackTrace();
-            return null;
-        }
+        String formatUrl = getBaseUrl() + formatUrl(super.getKeyword(), super.getLocation(), super.getWorkType() + "", super.getJobCategory(), super.getCompanyField(), super.getPosition() + "", getMinSalary(), getMaxSalary(), 1);
+        System.out.println("Url: " + formatUrl);
+        Document initDocument = null;
+        Pattern numberPattern = Pattern.compile("[0-9]+");
+        List<JobItem> jobItems = null;
 
-        int pageTotal = jobsTotal % pageSizeTopCv == 0 ? jobsTotal / pageSizeTopCv : (jobsTotal / pageSizeTopCv) + 1;
-        while (currentPage <= pageTotal) {
-            Elements jobElements = doc.select(TopCvData.SEARCH_LIST);
-            System.out.println(jobElements.size());
-            if (jobElements.size() == 0) {
-                return null;
-            }
-            for (var item : jobElements) {
-                var logo = item.select(TopCvData.LOGO).first().attr("src"); // Get image of job item: logo
-                var title = item.select(TopCvData.JOB_TITLE).first().text();
-                var deadline = Integer.parseInt(item.select(TopCvData.DEADLINE).first().text());
-                var company = item.select(TopCvData.COMPANY).first().text();
-                var salary = item.select(TopCvData.SALARY).first().text();
-                var location = item.select(TopCvData.LOCATION).first().text();
-                var time = item.select(TopCvData.TIME).first().text();
-                JobItem job = new JobItem(title, company, logo, deadline, location, salary, time);
-                jobs.add(job);
-                // System.out.println(img);
-            }
-
+        if (initDocument == null) {
+            Document firstPageResult = null;
             try {
-                currentPage += 1;
-                doc = Jsoup.connect(super.getBaseUrl() + "?page=" +currentPage).get();
-                // jobsTotal = Integer.parseInt(doc.select(".search-job .list-job .job-header b").first().text());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+                firstPageResult = Jsoup.connect(formatUrl + "?page=0").get();
+
+                Elements totalJobsElement = firstPageResult.body().select(TopCvData.JOBS_TOTAL);
+                String text = totalJobsElement.first().text();
+
+                int totalPage = 0;
+                int totalJobs = 0;
+                int counter = 1;
+                if (numberPattern.matcher(text).matches()) {
+                    totalJobs = Integer.parseInt(text);
+                    totalPage = totalJobs % TopCvData.JOBS_IN_PAGE > 0 ? totalJobs / TopCvData.JOBS_IN_PAGE + 1 : totalJobs / TopCvData.JOBS_IN_PAGE;
+                    while (counter < totalPage) {
+                        Elements select = firstPageResult.body().select(".job-item");
+                        for (Element e : select) {
+                            String jobName = e.select(TopCvData.JOB_TITLE).text();
+                            String companyName = e.select(TopCvData.COMPANY).text();
+                            int remainDays = Integer.parseInt(e.select(TopCvData.DEADLINE).text());
+                            String salary = e.select(TopCvData.SALARY).text();
+                            String updateTime = e.select(TopCvData.TIME).text();
+                            jobItems = jobItems == null ? new ArrayList<>() : jobItems;
+                            jobItems.add(new JobItem(jobName, companyName, "", remainDays, getLocation(), salary, updateTime));
+                            counter = counter + 1;
+                            firstPageResult = Jsoup.connect(formatUrl + "?page=" + counter).get();
+                        }
+                    }
+                    System.out.println("total jobs: " + jobItems.size());
+                    return jobItems;
+
+                } else {
+                    return null;
+                }
+            } catch (IOException e) {
                 e.printStackTrace();
-                return null;
             }
         }
-        List<JobItem> results = jobRepo.saveAllAndFlush(jobs);
-
-        System.out.println("Spider-Man crawled successfully");
-        return results;
-    }
-
-    @Override
-    public String genKeyword(String keyword) {
-        // ads sad
-        return keyword.replaceAll("\\s+", "-");
-    }
-
-    @Override
-    public String genCategory(String category) {
-        return "kl2c" + category + "t1";
-    }
-
-    @Override
-    public String genLocation(String location) {
-        return location.replaceAll("\\s+", "-");
-    }
-
-
-    @Override
-    public String genSalary(long salaryRangeId) {
-        // TODO Auto-generated method stub
         return null;
     }
-    
 
 
 }

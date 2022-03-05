@@ -8,7 +8,7 @@ public class CrawlerApplication {
 
 	public static void main(String[] args) {
 
-        System.setProperty("webdriver.edge.driver","C:\\coding\\edgedriver_win64\\msedgedriver.exe");
+        System.setProperty("webdriver.edge.driver","C:\\coding\\msedgedriver.exe");
 		SpringApplication.run(CrawlerApplication.class, args);
 	}
 
