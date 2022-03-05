@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class FetchApiController {
     
     private final String TOPCV = "https://www.topcv.vn";
-    private final String FACEBOOK = "https://www.facebook.com";
     List<? extends JobItem> jobList;
     private int jobsTotal = 0;
     private int pageSizeTopCv = 25;
@@ -43,7 +42,6 @@ public class FetchApiController {
 
     @GetMapping(value = {"", "/"})
     public String fetch() {
-        ArrayList<JobItem> jobs = new ArrayList<JobItem>();
         
         try {
             web.get(TOPCV);
@@ -160,8 +158,7 @@ public class FetchApiController {
         else {
             response.setStatus(200);
             response.setMessage("Get successfully");
-            int totalPage = jobsTotal / pageSizeTopCv;
-            response.setTotal(totalPage % 2 == 0 ? totalPage : totalPage + 1);
+            response.setTotal(jobList.size());
             response.setData(jobList);
         }
         return ResponseEntity.ok(response);

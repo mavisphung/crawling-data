@@ -1,8 +1,5 @@
 package com.example.crawlingdata.responses;
 
-import java.util.List;
-
-import com.example.crawlingdata.responses.models.JobItem;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 

@@ -1,0 +1,337 @@
+{
+  "10001": {
+    "id": 10001,
+    "name": "Kinh doanh / Bán hàng",
+    "alias": "kinh-doanh-ban-hang"
+  },
+  "10003": {
+    "id": 10003,
+    "name": "Biên / Phiên dịch",
+    "alias": "bien-phien-dich"
+  },
+  "10004": {
+    "id": 10004,
+    "name": "Báo chí / Truyền hình",
+    "alias": "bao-chi-truyen-hinh"
+  },
+  "10005": {
+    "id": 10005,
+    "name": "Bưu chính - Viễn thông",
+    "alias": "buu-chinh-vien-thong"
+  },
+  "10006": {
+    "id": 10006,
+    "name": "Bảo hiểm",
+    "alias": "bao-hiem"
+  },
+  "10007": {
+    "id": 10007,
+    "name": "Bất động sản",
+    "alias": "bat-dong-san"
+  },
+  "10008": {
+    "id": 10008,
+    "name": "Chứng khoán / Vàng / Ngoại tệ",
+    "alias": "chung-khoan-vang-ngoai-te"
+  },
+  "10009": {
+    "id": 10009,
+    "name": "Công nghệ cao",
+    "alias": "cong-nghe-cao"
+  },
+  "10010": {
+    "id": 10010,
+    "name": "Cơ khí / Chế tạo / Tự động hóa",
+    "alias": "co-khi-che-tao-tu-dong-hoa"
+  },
+  "10011": {
+    "id": 10011,
+    "name": "Du lịch",
+    "alias": "du-lich"
+  },
+  "10012": {
+    "id": 10012,
+    "name": "Dầu khí/Hóa chất",
+    "alias": "dau-khi-hoa-chat"
+  },
+  "10013": {
+    "id": 10013,
+    "name": "Dệt may / Da giày",
+    "alias": "det-may-da-giay"
+  },
+  "10014": {
+    "id": 10014,
+    "name": "Dịch vụ khách hàng",
+    "alias": "dich-vu-khach-hang"
+  },
+  "10015": {
+    "id": 10015,
+    "name": "Điện tử viễn thông",
+    "alias": "dien-tu-vien-thong"
+  },
+  "10016": {
+    "id": 10016,
+    "name": "Điện / Điện tử / Điện lạnh",
+    "alias": "dien-dien-tu-dien-lanh"
+  },
+  "10017": {
+    "id": 10017,
+    "name": "Giáo dục / Đào tạo",
+    "alias": "giao-duc-dao-tao"
+  },
+  "10018": {
+    "id": 10018,
+    "name": "Hoá học / Sinh học",
+    "alias": "hoa-hoc-sinh-hoc"
+  },
+  "10019": {
+    "id": 10019,
+    "name": "Hoạch định/Dự án",
+    "alias": "hoach-dinh-du-an"
+  },
+  "10020": {
+    "id": 10020,
+    "name": "Hàng gia dụng",
+    "alias": "hang-gia-dung"
+  },
+  "10021": {
+    "id": 10021,
+    "name": "Hàng hải",
+    "alias": "hang-hai"
+  },
+  "10022": {
+    "id": 10022,
+    "name": "Hàng không",
+    "alias": "hang-khong"
+  },
+  "10023": {
+    "id": 10023,
+    "name": "Hành chính / Văn phòng",
+    "alias": "hanh-chinh-van-phong"
+  },
+  "10024": {
+    "id": 10024,
+    "name": "In ấn / Xuất bản",
+    "alias": "in-an-xuat-ban"
+  },
+  "10025": {
+    "id": 10025,
+    "name": "IT Phần cứng / Mạng",
+    "alias": "it-phan-cung-mang"
+  },
+  "10026": {
+    "id": 10026,
+    "name": "IT phần mềm",
+    "alias": "it-phan-mem"
+  },
+  "10027": {
+    "id": 10027,
+    "name": "Khách sạn / Nhà hàng",
+    "alias": "khach-san-nha-hang"
+  },
+  "10028": {
+    "id": 10028,
+    "name": "Kế toán / Kiểm toán",
+    "alias": "ke-toan-kiem-toan"
+  },
+  "10029": {
+    "id": 10029,
+    "name": "Marketing / Truyền thông / Quảng cáo",
+    "alias": "marketing-truyen-thong-quang-cao"
+  },
+  "10030": {
+    "id": 10030,
+    "name": "Môi trường / Xử lý chất thải",
+    "alias": "moi-truong-xu-ly-chat-thai"
+  },
+  "10031": {
+    "id": 10031,
+    "name": "Mỹ phẩm / Trang sức",
+    "alias": "my-pham-trang-suc"
+  },
+  "10032": {
+    "id": 10032,
+    "name": "Mỹ thuật / Nghệ thuật / Điện ảnh",
+    "alias": "my-thuat-nghe-thuat-dien-anh"
+  },
+  "10033": {
+    "id": 10033,
+    "name": "Ngân hàng / Tài chính",
+    "alias": "ngan-hang-tai-chinh"
+  },
+  "10034": {
+    "id": 10034,
+    "name": "Nhân sự",
+    "alias": "nhan-su"
+  },
+  "10035": {
+    "id": 10035,
+    "name": "Nông / Lâm / Ngư nghiệp",
+    "alias": "nong-lam-ngu-nghiep"
+  },
+  "10036": {
+    "id": 10036,
+    "name": "Luật/Pháp lý",
+    "alias": "luat-phap-ly"
+  },
+  "10037": {
+    "id": 10037,
+    "name": "Quản lý chất lượng (QA/QC)",
+    "alias": "quan-ly-chat-luong-qa-qc"
+  },
+  "10038": {
+    "id": 10038,
+    "name": "Quản lý điều hành",
+    "alias": "quan-ly-dieu-hanh"
+  },
+  "10039": {
+    "id": 10039,
+    "name": "Thiết kế đồ họa",
+    "alias": "thiet-ke-do-hoa"
+  },
+  "10042": {
+    "id": 10042,
+    "name": "Thời trang",
+    "alias": "thoi-trang"
+  },
+  "10043": {
+    "id": 10043,
+    "name": "Thực phẩm / Đồ uống",
+    "alias": "thuc-pham-do-uong"
+  },
+  "10045": {
+    "id": 10045,
+    "name": "Tư vấn",
+    "alias": "tu-van"
+  },
+  "10046": {
+    "id": 10046,
+    "name": "Tổ chức sự kiện / Quà tặng",
+    "alias": "to-chuc-su-kien-qua-tang"
+  },
+  "10047": {
+    "id": 10047,
+    "name": "Vận tải / Kho vận",
+    "alias": "van-tai-kho-van"
+  },
+  "10048": {
+    "id": 10048,
+    "name": "Logistics",
+    "alias": "logistics"
+  },
+  "10049": {
+    "id": 10049,
+    "name": "Xuất nhập khẩu",
+    "alias": "xuat-nhap-khau"
+  },
+  "10050": {
+    "id": 10050,
+    "name": "Xây dựng",
+    "alias": "xay-dung"
+  },
+  "10051": {
+    "id": 10051,
+    "name": "Y tế / Dược",
+    "alias": "y-te-duoc"
+  },
+  "10052": {
+    "id": 10052,
+    "name": "Công nghệ Ô tô",
+    "alias": "cong-nghe-o-to"
+  },
+  "10101": {
+    "id": 10101,
+    "name": "An toàn lao động",
+    "alias": "an-toan-lao-dong"
+  },
+  "10102": {
+    "id": 10102,
+    "name": "Bán hàng kỹ thuật",
+    "alias": "ban-hang-ky-thuat"
+  },
+  "10103": {
+    "id": 10103,
+    "name": "Bán lẻ / bán sỉ",
+    "alias": "ban-le-ban-si"
+  },
+  "10104": {
+    "id": 10104,
+    "name": "Bảo trì / Sữa chữa",
+    "alias": "bao-tri-sua-chua"
+  },
+  "10110": {
+    "id": 10110,
+    "name": "Dược phẩm / Công nghệ sinh học",
+    "alias": "duoc-pham-cong-nghe-sinh-hoc"
+  },
+  "10111": {
+    "id": 10111,
+    "name": "Địa chất / Khoáng sản",
+    "alias": "dia-chat-khoang-san"
+  },
+  "10113": {
+    "id": 10113,
+    "name": "Hàng cao cấp",
+    "alias": "hang-cao-cap"
+  },
+  "10117": {
+    "id": 10117,
+    "name": "Hàng tiêu dùng",
+    "alias": "hang-tieu-dung"
+  },
+  "10120": {
+    "id": 10120,
+    "name": "Kiến trúc",
+    "alias": "kien-truc"
+  },
+  "10124": {
+    "id": 10124,
+    "name": "Phi chính phủ / Phi lợi nhuận",
+    "alias": "phi-chinh-phu-phi-loi-nhuan"
+  },
+  "10125": {
+    "id": 10125,
+    "name": "Sản phẩm công nghiệp",
+    "alias": "san-pham-cong-nghiep"
+  },
+  "10126": {
+    "id": 10126,
+    "name": "Sản xuất",
+    "alias": "san-xuat"
+  },
+  "10127": {
+    "id": 10127,
+    "name": "Tài chính / Đầu tư",
+    "alias": "tai-chinh-dau-tu"
+  },
+  "10128": {
+    "id": 10128,
+    "name": "Thiết kế nội thất",
+    "alias": "thiet-ke-noi-that"
+  },
+  "10129": {
+    "id": 10129,
+    "name": "Thư ký / Trợ lý",
+    "alias": "thu-ky-tro-ly"
+  },
+  "10130": {
+    "id": 10130,
+    "name": "Spa / Làm đẹp",
+    "alias": "spa-lam-dep"
+  },
+  "10131": {
+    "id": 10131,
+    "name": "Công nghệ thông tin",
+    "alias": "cong-nghe-thong-tin"
+  },
+  "10132": {
+    "id": 10132,
+    "name": "NGO / Phi chính phủ / Phi lợi nhuận",
+    "alias": "ngo-phi-chinh-phu-phi-loi-nhuan"
+  },
+  "11000": {
+    "id": 11000,
+    "name": "Ngành nghề khác",
+    "alias": "nganh-nghe-khac"
+  }
+}

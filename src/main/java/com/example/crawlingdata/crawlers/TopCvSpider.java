@@ -33,8 +33,8 @@ public class TopCvSpider extends Crawler implements UrlBuilder {
         double fromSalary, 
         double toSalary
     ) {
-        // https://www.topcv.vn/tim-viec-lam-[java]-<tai-[ho-chi-minh]>-<kl2c[10026]t1>?[salary=3]&[company_field=33]&[position=1]&[page=0]
-        //                                   keyword      location           category    salary      companyField       position
+        // https://www.topcv.vn/tim-viec-lam-[java]-<tai-[ho-chi-minh-kl2]><c[10026]><t1>?[salary=3]&[company_field=33]&[position=1]&[page=0]
+        //                                   keyword      location          category  time  salary      companyField       position
         StringBuilder sb = new StringBuilder(super.getBaseUrl());
         if (keyword != null && !keyword.isBlank())
             sb.append(genKeyword(keyword));
@@ -55,17 +55,22 @@ public class TopCvSpider extends Crawler implements UrlBuilder {
         Document doc = null;
         int currentPage = 0;
         int jobsTotal = 0;
+        String crawlUrl = super.getBaseUrl() + "?page=" + currentPage;
         try {
-            doc = Jsoup.connect(super.getBaseUrl() + "?page=" + currentPage).get();
-            jobsTotal = Integer.parseInt(doc.select(TopCvData.JOBS_TOTAL).first().text());
+            doc = Jsoup.connect(crawlUrl).get();
+            System.out.println("Crawling from " + crawlUrl);
+            var jobTotalStr = doc.select(TopCvData.JOBS_TOTAL).first().text();
+            jobsTotal = Integer.valueOf(jobTotalStr.replace(",", ""));
         } catch (Exception e) {
             // System.out.println(e.getMessage());
-            // e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
 
         int pageTotal = jobsTotal % pageSizeTopCv == 0 ? jobsTotal / pageSizeTopCv : (jobsTotal / pageSizeTopCv) + 1;
         while (currentPage <= pageTotal) {
+            crawlUrl = super.getBaseUrl() + "?page=" + currentPage;
+            System.out.println("Crawling from " + crawlUrl);
             Elements jobElements = doc.select(TopCvData.SEARCH_LIST);
             System.out.println(jobElements.size());
             if (jobElements.size() == 0) {
