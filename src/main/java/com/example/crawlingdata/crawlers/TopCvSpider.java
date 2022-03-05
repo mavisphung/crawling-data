@@ -135,13 +135,12 @@ public class TopCvSpider extends Crawler {
                             String updateTime = e.select(TopCvData.TIME).text();
                             jobItems = jobItems == null ? new ArrayList<>() : jobItems;
                             jobItems.add(new JobItem(jobName, companyName, "", remainDays, getLocation(), salary, updateTime));
-                            counter = counter + 1;
-                            firstPageResult = Jsoup.connect(formatUrl + "?page=" + counter).get();
                         }
+                        counter = counter + 1;
+                        firstPageResult = Jsoup.connect(formatUrl + "?page=" + counter).get();
                     }
                     System.out.println("total jobs: " + jobItems.size());
                     return jobItems;
-
                 } else {
                     return null;
                 }
