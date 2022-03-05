@@ -138,30 +138,15 @@ public class FetchApiController {
         @RequestParam(required = false) String keyword,
         @RequestParam(required = false) String location,
         @RequestParam(required = false) String category,
+        @RequestParam(required = false) String workType,
         @RequestParam(required = false) String companyField,
         @RequestParam(required = false) String position,
         @RequestParam(required = false) String salary
     ) {
-        System.out.println("findAllJobsV3 invoked");
-        // List<JobItem> jobList = getAllJobsFrom(url, jobName);
 
-        TopCvSpider spider = new TopCvSpider(jobRepo);
-        var formattedUrl = spider.formatUrl(keyword, location, category, companyField, position, 0, 0);
-        System.out.println(formattedUrl);
-        jobList = spider.crawl();
-        JobResponse response = new JobResponse();
-        
-        if (jobList == null || jobList.size() == 0) {
-            response.setStatus(200);
-            response.setMessage("No data for the query");
-        } 
-        else {
-            response.setStatus(200);
-            response.setMessage("Get successfully");
-            response.setTotal(jobList.size());
-            response.setData(jobList);
-        }
-        return ResponseEntity.ok(response);
+        TopCvSpider spider = new TopCvSpider(keyword,category,companyField,0,100000,location,2,1,1);
+        List<? extends JobItem> crawl = spider.crawl();
+        return ResponseEntity.ok(crawl);
     }
 
     private ArrayList<JobItem> crawlJobsFromTopCv(String url, String jobName, int page) {
