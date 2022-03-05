@@ -66,7 +66,7 @@ public class TopCvSpider extends Crawler {
             var cateogryId = 10026;
             filters.put("3", cateogryId);
         }
-        if (workType != null && !category.isBlank()) {
+        if (workType != null && !workType.isBlank()) {
             var workTypeId = 1;
             filters.put("4", workTypeId);
         }
