@@ -1,347 +1,347 @@
-{
-  "1": {
+[
+  {
     "id": 1,
     "name": "Hà Nội",
     "alias": "ha-noi"
   },
-  "2": {
+  {
     "id": 2,
     "name": "Hồ Chí Minh",
     "alias": "ho-chi-minh"
   },
-  "3": {
+  {
     "id": 3,
     "name": "Bình Dương",
     "alias": "binh-duong"
   },
-  "4": {
+  {
     "id": 4,
     "name": "Bắc Ninh",
     "alias": "bac-ninh"
   },
-  "5": {
+  {
     "id": 5,
     "name": "Đồng Nai",
     "alias": "dong-nai"
   },
-  "6": {
+  {
     "id": 6,
     "name": "Hưng Yên",
     "alias": "hung-yen"
   },
-  "7": {
+  {
     "id": 7,
     "name": "Hải Dương",
     "alias": "hai-duong"
   },
-  "8": {
+  {
     "id": 8,
     "name": "Đà Nẵng",
     "alias": "da-nang"
   },
-  "9": {
+  {
     "id": 9,
     "name": "Hải Phòng",
     "alias": "hai-phong"
   },
-  "10": {
+  {
     "id": 10,
     "name": "An Giang",
     "alias": "an-giang"
   },
-  "11": {
+  {
     "id": 11,
     "name": "Bà Rịa-Vũng Tàu",
     "alias": "ba-ria-vung-tau"
   },
-  "12": {
+  {
     "id": 12,
     "name": "Bắc Giang",
     "alias": "bac-giang"
   },
-  "13": {
+  {
     "id": 13,
     "name": "Bắc Kạn",
     "alias": "bac-kan"
   },
-  "14": {
+  {
     "id": 14,
     "name": "Bạc Liêu",
     "alias": "bac-lieu"
   },
-  "15": {
+  {
     "id": 15,
     "name": "Bến Tre",
     "alias": "ben-tre"
   },
-  "16": {
+  {
     "id": 16,
     "name": "Bình Định",
     "alias": "binh-dinh"
   },
-  "17": {
+  {
     "id": 17,
     "name": "Bình Phước",
     "alias": "binh-phuoc"
   },
-  "18": {
+  {
     "id": 18,
     "name": "Bình Thuận",
     "alias": "binh-thuan"
   },
-  "19": {
+  {
     "id": 19,
     "name": "Cà Mau",
     "alias": "ca-mau"
   },
-  "20": {
+  {
     "id": 20,
     "name": "Cần Thơ",
     "alias": "can-tho"
   },
-  "21": {
+  {
     "id": 21,
     "name": "Cao Bằng",
     "alias": "cao-bang"
   },
-  "22": {
+  {
     "id": 22,
     "name": "Cửu Long",
     "alias": "cuu-long"
   },
-  "23": {
+  {
     "id": 23,
     "name": "Đắc Lắc",
     "alias": "dac-lac"
   },
-  "24": {
+  {
     "id": 24,
     "name": "Đắc Nông",
     "alias": "dac-nong"
   },
-  "25": {
+  {
     "id": 25,
     "name": "Điện Biên",
     "alias": "dien-bien"
   },
-  "26": {
+  {
     "id": 26,
     "name": "Đồng Tháp",
     "alias": "dong-thap"
   },
-  "27": {
+  {
     "id": 27,
     "name": "Gia Lai",
     "alias": "gia-lai"
   },
-  "28": {
+  {
     "id": 28,
     "name": "Hà Giang",
     "alias": "ha-giang"
   },
-  "29": {
+  {
     "id": 29,
     "name": "Hà Nam",
     "alias": "ha-nam"
   },
-  "30": {
+  {
     "id": 30,
     "name": "Hà Tĩnh",
     "alias": "ha-tinh"
   },
-  "31": {
+  {
     "id": 31,
     "name": "Hậu Giang",
     "alias": "hau-giang"
   },
-  "32": {
+  {
     "id": 32,
     "name": "Hoà Bình",
     "alias": "hoa-binh"
   },
-  "33": {
+  {
     "id": 33,
     "name": "Khánh Hoà",
     "alias": "khanh-hoa"
   },
-  "34": {
+  {
     "id": 34,
     "name": "Kiên Giang",
     "alias": "kien-giang"
   },
-  "35": {
+  {
     "id": 35,
     "name": "Kon Tum",
     "alias": "kon-tum"
   },
-  "36": {
+  {
     "id": 36,
     "name": "Lai Châu",
     "alias": "lai-chau"
   },
-  "37": {
+  {
     "id": 37,
     "name": "Lâm Đồng",
     "alias": "lam-dong"
   },
-  "38": {
+  {
     "id": 38,
     "name": "Lạng Sơn",
     "alias": "lang-son"
   },
-  "39": {
+  {
     "id": 39,
     "name": "Lào Cai",
     "alias": "lao-cai"
   },
-  "40": {
+  {
     "id": 40,
     "name": "Long An",
     "alias": "long-an"
   },
-  "41": {
+  {
     "id": 41,
     "name": "Miền Bắc",
     "alias": "mien-bac"
   },
-  "42": {
+  {
     "id": 42,
     "name": "Miền Nam",
     "alias": "mien-nam"
   },
-  "43": {
+  {
     "id": 43,
     "name": "Miền Trung",
     "alias": "mien-trung"
   },
-  "44": {
+  {
     "id": 44,
     "name": "Nam Định",
     "alias": "nam-dinh"
   },
-  "45": {
+  {
     "id": 45,
     "name": "Nghệ An",
     "alias": "nghe-an"
   },
-  "46": {
+  {
     "id": 46,
     "name": "Ninh Bình",
     "alias": "ninh-binh"
   },
-  "47": {
+  {
     "id": 47,
     "name": "Ninh Thuận",
     "alias": "ninh-thuan"
   },
-  "48": {
+  {
     "id": 48,
     "name": "Phú Thọ",
     "alias": "phu-tho"
   },
-  "49": {
+  {
     "id": 49,
     "name": "Phú Yên",
     "alias": "phu-yen"
   },
-  "50": {
+  {
     "id": 50,
     "name": "Quảng Bình",
     "alias": "quang-binh"
   },
-  "51": {
+  {
     "id": 51,
     "name": "Quảng Nam",
     "alias": "quang-nam"
   },
-  "52": {
+  {
     "id": 52,
     "name": "Quảng Ngãi",
     "alias": "quang-ngai"
   },
-  "53": {
+  {
     "id": 53,
     "name": "Quảng Ninh",
     "alias": "quang-ninh"
   },
-  "54": {
+  {
     "id": 54,
     "name": "Quảng Trị",
     "alias": "quang-tri"
   },
-  "55": {
+  {
     "id": 55,
     "name": "Sóc Trăng",
     "alias": "soc-trang"
   },
-  "56": {
+  {
     "id": 56,
     "name": "Sơn La",
     "alias": "son-la"
   },
-  "57": {
+  {
     "id": 57,
     "name": "Tây Ninh",
     "alias": "tay-ninh"
   },
-  "58": {
+  {
     "id": 58,
     "name": "Thái Bình",
     "alias": "thai-binh"
   },
-  "59": {
+  {
     "id": 59,
     "name": "Thái Nguyên",
     "alias": "thai-nguyen"
   },
-  "60": {
+  {
     "id": 60,
     "name": "Thanh Hoá",
     "alias": "thanh-hoa"
   },
-  "61": {
+  {
     "id": 61,
     "name": "Thừa Thiên Huế",
     "alias": "thua-thien-hue"
   },
-  "62": {
+  {
     "id": 62,
     "name": "Tiền Giang",
     "alias": "tien-giang"
   },
-  "63": {
+  {
     "id": 63,
     "name": "Toàn Quốc",
     "alias": "toan-quoc"
   },
-  "64": {
+  {
     "id": 64,
     "name": "Trà Vinh",
     "alias": "tra-vinh"
   },
-  "65": {
+  {
     "id": 65,
     "name": "Tuyên Quang",
     "alias": "tuyen-quang"
   },
-  "66": {
+  {
     "id": 66,
     "name": "Vĩnh Long",
     "alias": "vinh-long"
   },
-  "67": {
+  {
     "id": 67,
     "name": "Vĩnh Phúc",
     "alias": "vinh-phuc"
   },
-  "68": {
+  {
     "id": 68,
     "name": "Yên Bái",
     "alias": "yen-bai"
   },
-  "100": {
+  {
     "id": 100,
     "name": "Nước Ngoài",
     "alias": "nuoc-ngoai"
   }
-}
+]
