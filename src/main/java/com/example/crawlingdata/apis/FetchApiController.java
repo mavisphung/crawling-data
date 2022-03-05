@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class FetchApiController {
     
     private final String TOPCV = "https://www.topcv.vn";
-    private final String FACEBOOK = "https://www.facebook.com";
     List<? extends JobItem> jobList;
     private int jobsTotal = 0;
     private int pageSizeTopCv = 25;
@@ -43,7 +42,6 @@ public class FetchApiController {
 
     @GetMapping(value = {"", "/"})
     public String fetch() {
-        ArrayList<JobItem> jobs = new ArrayList<JobItem>();
         
         try {
             web.get(TOPCV);
