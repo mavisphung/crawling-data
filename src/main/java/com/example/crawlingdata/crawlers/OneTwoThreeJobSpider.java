@@ -55,7 +55,7 @@ public class OneTwoThreeJobSpider extends Crawler {
     }
 
     @Override
-    public List<? extends JobItem> crawl() {
+    public List<JobItem> crawl() {
         String url = super.getBaseUrl() + formatUrl(super.getKeyword(), super.getLocation(), super.getWorkType() + "", super.getJobCategory(), super.getCompanyField(), super.getPosition() + "", getMinSalary(), getMaxSalary(), 1);
         System.out.println("Url: " + url);
         List<JobItem> resultsList = new ArrayList<>();

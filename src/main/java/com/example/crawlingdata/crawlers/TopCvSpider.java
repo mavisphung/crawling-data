@@ -120,7 +120,7 @@ public class TopCvSpider extends Crawler {
     }
 
     @Override
-    public List<? extends JobItem> crawl() {
+    public List<JobItem> crawl() {
         String formatUrl = getBaseUrl() + formatUrl(super.getKeyword(), super.getLocation(), super.getWorkType() + "", super.getJobCategory(), super.getCompanyField(), super.getPosition() + "", getMinSalary(), getMaxSalary(), 1);
         System.out.println("Url: " + formatUrl);
         // Pattern numberPattern = Pattern.compile("[0-9]+");

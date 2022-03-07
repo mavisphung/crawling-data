@@ -89,14 +89,26 @@ public class FetchApiController {
         @RequestParam(required = false) String salary
     ) {
         
-        TopCvSpider spider = new TopCvSpider(keyword, category, companyField, 0, 100000, location, 2, 1, 1);
-        spider.setJobRepo(jobRepo);
-        spider.setCateRepo(cateRepo);
-        spider.setCityRepo(cityRepo);
-        spider.setPositionRepo(positionRepo);
-        spider.setSalaryRepo(salaryRepo);
-        spider.setWorkTypeRepo(workTypeRepo);
-        List<? extends JobItem> data = spider.crawl();
+        TopCvSpider topCvSpider = new TopCvSpider(keyword, category, companyField, 0, 100000, location, 2, 1, 1);
+        topCvSpider.setJobRepo(jobRepo);
+        topCvSpider.setCateRepo(cateRepo);
+        topCvSpider.setCityRepo(cityRepo);
+        topCvSpider.setPositionRepo(positionRepo);
+        topCvSpider.setSalaryRepo(salaryRepo);
+        topCvSpider.setWorkTypeRepo(workTypeRepo);
+
+        OneTwoThreeJobSpider ottSpider = new OneTwoThreeJobSpider(keyword, category, companyField, 0, 100000, location, 2, 1, 1);
+        ottSpider.setJobRepo(jobRepo);
+        ottSpider.setCateRepo(cateRepo);
+        ottSpider.setCityRepo(cityRepo);
+        ottSpider.setPositionRepo(positionRepo);
+        ottSpider.setSalaryRepo(salaryRepo);
+        ottSpider.setWorkTypeRepo(workTypeRepo);
+        // List<JobItem> data1 = ottSpider.crawl();
+        // List<JobItem> data = topCvSpider.crawl();
+        ottSpider.crawl();
+        topCvSpider.crawl();
+        var data = jobRepo.findAll();
         JobResponse response = new JobResponse();
         if (data == null) {
             response.setStatus(404);

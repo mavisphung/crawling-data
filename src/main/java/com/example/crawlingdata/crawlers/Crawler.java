@@ -39,5 +39,5 @@ public abstract class Crawler {
             int pageNum
     );
 
-    public abstract List<? extends JobItem> crawl();
+    public abstract List<JobItem> crawl();
 }
