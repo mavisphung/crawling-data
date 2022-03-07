@@ -3,6 +3,9 @@ package com.example.crawlingdata.crawlers;
 import com.example.crawlingdata.repositories.CategoryRepository;
 import com.example.crawlingdata.repositories.CityRepository;
 import com.example.crawlingdata.repositories.JobRepository;
+import com.example.crawlingdata.repositories.PositionRepository;
+import com.example.crawlingdata.repositories.SalaryRepository;
+import com.example.crawlingdata.repositories.WorkTypeRepository;
 import com.example.crawlingdata.responses.models.JobItem;
 import com.example.crawlingdata.util.TopCvData;
 import org.jsoup.Jsoup;
@@ -24,6 +27,9 @@ public class TopCvSpider extends Crawler {
     private JobRepository jobRepo;
     private CategoryRepository cateRepo;
     private CityRepository cityRepo;
+    private PositionRepository positionRepo;
+    private SalaryRepository salaryRepo;
+    private WorkTypeRepository workTypeRepo;
     public TopCvSpider(String keyword, String jobCategory, String companyField, int minSalary, int maxSalary, String location, int minimumExperience, int position, int workType) {
         super("https://www.topcv.vn", keyword, jobCategory, companyField, minSalary, maxSalary, location, minimumExperience, position, workType);
     }
@@ -137,12 +143,10 @@ public class TopCvSpider extends Crawler {
                 for (Element e : select) {
                     String jobName = e.select(TopCvData.JOB_TITLE).first().text();
                     String companyName = e.select(TopCvData.COMPANY).first().text();
-                    int remainDays = Integer.parseInt(e.select(TopCvData.DEADLINE).first().text());
                     String salary = e.select(TopCvData.SALARY).first().text();
-                    String updateTime = e.select(TopCvData.TIME).first().text();
                     String logo = e.select(TopCvData.LOGO).first().attr("src");
                     String location = e.select(TopCvData.LOCATION).first().text();
-                    jobItems.add(new JobItem(jobName, companyName, logo, remainDays, location, salary, updateTime));
+                    jobItems.add(new JobItem(jobName, companyName, logo, location, salary));
                 }
                 System.out.println("Crawling page: " + counter + " | " + "Jobs per page: " + select.size());
                 counter = counter + 1;
@@ -157,6 +161,4 @@ public class TopCvSpider extends Crawler {
         }
         return null;
     }
-
-
 }

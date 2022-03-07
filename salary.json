@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "title": "Dưới 3 triệu"
+  },
+  {
+    "id": 2,
+    "title": "3 - 5 triệu"
+  },
+  {
+    "id": 3,
+    "title": "5 - 7 triệu"
+  },
+  {
+    "id": 4,
+    "title": "7 - 10 triệu"
+  },
+  {
+    "id": 5,
+    "title": "10 - 12 triệu"
+  },
+  {
+    "id": 6,
+    "title": "12 - 15 triệu"
+  },
+  {
+    "id": 7,
+    "title": "15 - 20 triệu"
+  },
+  {
+    "id": 8,
+    "title": "20 - 25 triệu"
+  },
+  {
+    "id": 9,
+    "title": "25 - 30 triệu"
+  },
+  {
+    "id": 10,
+    "title": "Trên 30 triệu"
+  },
+  {
+    "id": 127,
+    "title": "Thoả thuận"
+  }
+]

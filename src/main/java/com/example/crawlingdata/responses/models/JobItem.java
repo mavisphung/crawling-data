@@ -30,24 +30,16 @@ public class JobItem {
     private String companyLogo;
 
     @Column
-    private int deadline;
-
-    @Column
     private String location;
 
     @Column
     private String salary;
 
-    @Column
-    private String updatedAt;
-
-    public JobItem(String title, String company, String logo, int deadline, String location, String salary, String time) {
+    public JobItem(String title, String company, String logo, String location, String salary) {
         this.title = title;
         this.company = company;
         this.companyLogo = logo;
-        this.deadline = deadline;
         this.location = location;
         this.salary = salary;
-        this.updatedAt = time;
     }
 }

@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.crawlingdata.crawlers.OneTwoThreeJobSpider;
 import com.example.crawlingdata.crawlers.TopCvSpider;
-import com.example.crawlingdata.repositories.CategoryRepository;
-import com.example.crawlingdata.repositories.CityRepository;
-import com.example.crawlingdata.repositories.JobRepository;
+import com.example.crawlingdata.repositories.*;
 import com.example.crawlingdata.responses.JobResponse;
 import com.example.crawlingdata.responses.models.JobItem;
 import com.example.crawlingdata.responses.models.WikiItem;
@@ -17,11 +16,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,44 +29,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api")
 public class FetchApiController {
     
-    private final String TOPCV = "https://www.topcv.vn";
     List<? extends JobItem> jobList;
     private WebDriver web;
     private final JobRepository jobRepo;
     private final CategoryRepository cateRepo;
     private final CityRepository cityRepo;
+    private final PositionRepository positionRepo;
+    private final SalaryRepository salaryRepo;
+    private final WorkTypeRepository workTypeRepo;
     private DummyDatabase db;
 
-    public FetchApiController(WebDriver web, JobRepository jobRepo, CategoryRepository cateRepo, CityRepository cityRepo) {
+    public FetchApiController(
+        WebDriver web, 
+        JobRepository jobRepo, 
+        CategoryRepository cateRepo,
+        CityRepository cityRepo,
+        PositionRepository positionRepo,
+        SalaryRepository salaryRepo,
+        WorkTypeRepository workTypeRepo
+    ) {
         this.web = web;
         jobList = new ArrayList<JobItem>();
         this.jobRepo = jobRepo;
         this.cateRepo = cateRepo;
         this.cityRepo = cityRepo;
-    }
-
-    @GetMapping(value = {"", "/"})
-    public String fetch() {
-        
-        try {
-            web.get(TOPCV);
-            var keywordInput = web.findElement(By.cssSelector("input#keyword"));
-            var submitButton = web.findElement(By.cssSelector(".btn-search-job"));
-    //        WebElement workCategory = web.findElement(By.cssSelector("span#select2-category-container"));
-    //        WebElement categorySelect = web.findElement(By.cssSelector("select#category"));
-            keywordInput.sendKeys("java developer");
-            submitButton.click();
-            
-            List<WebElement> elements = web.findElements(By.cssSelector("a.underline-box-job"));
-            elements.stream().forEach((ele) ->{
-                System.out.println(ele.getAttribute("href"));
-            });
-
-        } catch (Exception e) {
-            System.out.println("Error message: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return "Hello world";
+        this.positionRepo = positionRepo;
+        this.salaryRepo = salaryRepo;
+        this.workTypeRepo = workTypeRepo;
     }
 
     @GetMapping("/wiki/")
@@ -101,13 +88,14 @@ public class FetchApiController {
         @RequestParam(required = false) String position,
         @RequestParam(required = false) String salary
     ) {
-
         
-
         TopCvSpider spider = new TopCvSpider(keyword, category, companyField, 0, 100000, location, 2, 1, 1);
         spider.setJobRepo(jobRepo);
         spider.setCateRepo(cateRepo);
         spider.setCityRepo(cityRepo);
+        spider.setPositionRepo(positionRepo);
+        spider.setSalaryRepo(salaryRepo);
+        spider.setWorkTypeRepo(workTypeRepo);
         List<? extends JobItem> data = spider.crawl();
         JobResponse response = new JobResponse();
         if (data == null) {
@@ -130,7 +118,43 @@ public class FetchApiController {
 
     @GetMapping("/add-data")
     public String doTask() {
-        db = new DummyDatabase(cateRepo, cityRepo);
+        db = new DummyDatabase(cateRepo, cityRepo, positionRepo, salaryRepo, workTypeRepo);
         return "Added data";
+    }
+
+    @GetMapping("/crawl/123job")
+    public ResponseEntity<JobResponse> crawl123Job(
+        @RequestParam(required = false, name = "q") String keyword,
+        @RequestParam(required = false, name = "l") String location,
+        @RequestParam(required = false, name = "s") String salary,
+        @RequestParam(required = false, name = "level") String workType,
+        @RequestParam(required = false, name = "cate") String category
+    ) {
+        OneTwoThreeJobSpider spider = new OneTwoThreeJobSpider(keyword, category, "", 0, 5000000, location, 0, 0, 0);
+        spider.setJobRepo(jobRepo);
+        spider.setCateRepo(cateRepo);
+        spider.setCityRepo(cityRepo);
+        spider.setPositionRepo(positionRepo);
+        spider.setSalaryRepo(salaryRepo);
+        spider.setWorkTypeRepo(workTypeRepo);
+
+        List<? extends JobItem> jobs = spider.crawl();
+        
+        JobResponse response = new JobResponse();
+        if (jobs == null) {
+            response.setStatus(500);
+            response.setMessage("server error");
+        } else if (jobs.size() == 0) {
+            response.setStatus(404);
+            response.setMessage("Not found any data");
+        }
+        else {
+            response.setStatus(200);
+            response.setMessage("Get data successfully");
+            response.setTotal(jobs.size());
+            response.setData(jobs);
+        }
+
+        return ResponseEntity.ok(response);
     }
 }
