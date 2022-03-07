@@ -43,6 +43,8 @@ public class OneTwoThreeJobSpider extends Crawler {
         StringBuilder sb = new StringBuilder("/tuyen-dung?");
         if (keyword != null && !keyword.isBlank()) {
             sb.append("q=" + keyword + "&");
+        } else {
+            sb.append("q=&");
         }
 
         if (location != null && !location.isBlank()) {
