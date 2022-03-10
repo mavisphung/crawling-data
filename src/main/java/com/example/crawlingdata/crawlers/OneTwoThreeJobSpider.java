@@ -6,10 +6,12 @@ import java.util.List;
 import com.example.crawlingdata.repositories.CategoryRepository;
 import com.example.crawlingdata.repositories.CityRepository;
 import com.example.crawlingdata.repositories.JobRepository;
+import com.example.crawlingdata.repositories.KeywordRepository;
 import com.example.crawlingdata.repositories.PositionRepository;
 import com.example.crawlingdata.repositories.SalaryRepository;
 import com.example.crawlingdata.repositories.WorkTypeRepository;
 import com.example.crawlingdata.responses.models.JobItem;
+import com.example.crawlingdata.responses.models.Keyword;
 import com.example.crawlingdata.util.OneTwoThreeJobData;
 
 import org.jsoup.Jsoup;
@@ -31,6 +33,7 @@ public class OneTwoThreeJobSpider extends Crawler {
     private PositionRepository positionRepo;
     private SalaryRepository salaryRepo;
     private WorkTypeRepository workTypeRepo;
+    private KeywordRepository kwRepo;
 
     public OneTwoThreeJobSpider(String keyword, String jobCategory, String companyField, int minSalary, int maxSalary, String location, int minimumExperience, int position, int workType) {
         super("https://123job.vn/", keyword, jobCategory, companyField, minSalary, maxSalary, location, minimumExperience, position, workType);
@@ -58,6 +61,7 @@ public class OneTwoThreeJobSpider extends Crawler {
     public List<JobItem> crawl() {
         String url = super.getBaseUrl() + formatUrl(super.getKeyword(), super.getLocation(), super.getWorkType() + "", super.getJobCategory(), super.getCompanyField(), super.getPosition() + "", getMinSalary(), getMaxSalary(), 1);
         System.out.println("Url: " + url);
+        kwRepo.save(new Keyword(super.getKeyword()));
         List<JobItem> resultsList = new ArrayList<>();
         Document docs = null;
         Elements foundJobs = null;
@@ -73,6 +77,8 @@ public class OneTwoThreeJobSpider extends Crawler {
             for (String myUrl : urls) {
                 docs = Jsoup.connect(myUrl).get();
                 foundJobs = docs.select(OneTwoThreeJobData.JOB_ITEMS);
+                if (foundJobs.isEmpty())
+                    return null;
                 docsList.add(foundJobs);
             }
             

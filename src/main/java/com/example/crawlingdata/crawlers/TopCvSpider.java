@@ -3,10 +3,12 @@ package com.example.crawlingdata.crawlers;
 import com.example.crawlingdata.repositories.CategoryRepository;
 import com.example.crawlingdata.repositories.CityRepository;
 import com.example.crawlingdata.repositories.JobRepository;
+import com.example.crawlingdata.repositories.KeywordRepository;
 import com.example.crawlingdata.repositories.PositionRepository;
 import com.example.crawlingdata.repositories.SalaryRepository;
 import com.example.crawlingdata.repositories.WorkTypeRepository;
 import com.example.crawlingdata.responses.models.JobItem;
+import com.example.crawlingdata.responses.models.Keyword;
 import com.example.crawlingdata.util.TopCvData;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,6 +32,8 @@ public class TopCvSpider extends Crawler {
     private PositionRepository positionRepo;
     private SalaryRepository salaryRepo;
     private WorkTypeRepository workTypeRepo;
+    private KeywordRepository kwRepo;
+
     public TopCvSpider(String keyword, String jobCategory, String companyField, int minSalary, int maxSalary, String location, int minimumExperience, int position, int workType) {
         super("https://www.topcv.vn", keyword, jobCategory, companyField, minSalary, maxSalary, location, minimumExperience, position, workType);
     }
@@ -123,6 +127,7 @@ public class TopCvSpider extends Crawler {
     public List<JobItem> crawl() {
         String formatUrl = getBaseUrl() + formatUrl(super.getKeyword(), super.getLocation(), super.getWorkType() + "", super.getJobCategory(), super.getCompanyField(), super.getPosition() + "", getMinSalary(), getMaxSalary(), 1);
         System.out.println("Url: " + formatUrl);
+        kwRepo.save(new Keyword(super.getKeyword()));
         // Pattern numberPattern = Pattern.compile("[0-9]+");
         List<JobItem> jobItems = new ArrayList<>();
 
@@ -131,6 +136,9 @@ public class TopCvSpider extends Crawler {
             firstPageResult = Jsoup.connect(formatUrl + "?page=0").get();
 
             Elements totalJobsElement = firstPageResult.body().select(TopCvData.JOBS_TOTAL);
+            if (totalJobsElement.isEmpty()) {
+                return null;
+            }
             String text = totalJobsElement.first().text();
             int totalJobs = Integer.parseInt(text.replace(",", ""));
             int totalPage = 0;
@@ -151,6 +159,9 @@ public class TopCvSpider extends Crawler {
                 System.out.println("Crawling page: " + counter + " | " + "Jobs per page: " + select.size());
                 counter = counter + 1;
                 firstPageResult = Jsoup.connect(formatUrl + "?page=" + counter).get();
+                if (counter == 20) {
+                    break;
+                }
             }
             System.out.println("total jobs: " + jobItems.size());
             

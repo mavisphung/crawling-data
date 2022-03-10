@@ -15,11 +15,11 @@
     
     <h1>Hello world!</h1>
     
-    <a href="/api/wiki/" class="btn btn-primary">Fetch data</a>
-    <button th:onclick="clickMe()" class="btn btn-info">Call api</button>
+    <!-- <a href="/api/wiki/" class="btn btn-primary">Fetch data</a> -->
+    <a href="/api/export-excel/" class="btn btn-info">Export to excel</a>
     
     <div>
-        <input id="keyword" type="text" class="form-control" placeholder="Search" name="keyword">
+        <input id="keyword" type="text" class="form-control" placeholder="Search" name="keyword" required>
         <button th:onclick="fetchJobData()" class="btn btn-primary">Search</button>
     </div>
     <div class="container">

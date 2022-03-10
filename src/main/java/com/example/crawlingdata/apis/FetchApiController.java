@@ -1,13 +1,19 @@
 package com.example.crawlingdata.apis;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import com.example.crawlingdata.crawlers.OneTwoThreeJobSpider;
 import com.example.crawlingdata.crawlers.TopCvSpider;
 import com.example.crawlingdata.repositories.*;
 import com.example.crawlingdata.responses.JobResponse;
+import com.example.crawlingdata.responses.UserExcelExporter;
 import com.example.crawlingdata.responses.models.JobItem;
 import com.example.crawlingdata.responses.models.WikiItem;
 import com.example.crawlingdata.util.DummyDatabase;
@@ -37,6 +43,7 @@ public class FetchApiController {
     private final PositionRepository positionRepo;
     private final SalaryRepository salaryRepo;
     private final WorkTypeRepository workTypeRepo;
+    private final KeywordRepository kwRepo;
     private DummyDatabase db;
 
     public FetchApiController(
@@ -46,7 +53,8 @@ public class FetchApiController {
         CityRepository cityRepo,
         PositionRepository positionRepo,
         SalaryRepository salaryRepo,
-        WorkTypeRepository workTypeRepo
+        WorkTypeRepository workTypeRepo,
+        KeywordRepository kwRepo
     ) {
         this.web = web;
         jobList = new ArrayList<JobItem>();
@@ -56,6 +64,7 @@ public class FetchApiController {
         this.positionRepo = positionRepo;
         this.salaryRepo = salaryRepo;
         this.workTypeRepo = workTypeRepo;
+        this.kwRepo = kwRepo;
     }
 
     @GetMapping("/wiki/")
@@ -96,6 +105,7 @@ public class FetchApiController {
         topCvSpider.setPositionRepo(positionRepo);
         topCvSpider.setSalaryRepo(salaryRepo);
         topCvSpider.setWorkTypeRepo(workTypeRepo);
+        topCvSpider.setKwRepo(kwRepo);
 
         OneTwoThreeJobSpider ottSpider = new OneTwoThreeJobSpider(keyword, category, companyField, 0, 100000, location, 2, 1, 1);
         ottSpider.setJobRepo(jobRepo);
@@ -104,6 +114,7 @@ public class FetchApiController {
         ottSpider.setPositionRepo(positionRepo);
         ottSpider.setSalaryRepo(salaryRepo);
         ottSpider.setWorkTypeRepo(workTypeRepo);
+        ottSpider.setKwRepo(kwRepo);
         // List<JobItem> data1 = ottSpider.crawl();
         // List<JobItem> data = topCvSpider.crawl();
         ottSpider.crawl();
@@ -149,6 +160,7 @@ public class FetchApiController {
         spider.setPositionRepo(positionRepo);
         spider.setSalaryRepo(salaryRepo);
         spider.setWorkTypeRepo(workTypeRepo);
+        
 
         List<? extends JobItem> jobs = spider.crawl();
         
@@ -168,5 +180,34 @@ public class FetchApiController {
         }
 
         return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/export-excel")
+    public void exportToExcel(HttpServletResponse response) {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+         
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=jobs_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+         
+        List<JobItem> listJobs = jobRepo.findAll();
+         
+        UserExcelExporter excelExporter = new UserExcelExporter(listJobs);
+        
+        try {
+            excelExporter.export(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // return ResponseEntity.internalServerError().build();
+        }
+
+        // JobResponse result = new JobResponse();
+
+        // result.setStatus(200);
+        // result.setMessage("Exported data to excel file");
+        // return ResponseEntity.ok(result);
     }
 }
