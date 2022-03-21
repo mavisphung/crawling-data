@@ -2,11 +2,13 @@ package com.example.crawlingdata.crawlers;
 
 import com.example.crawlingdata.repositories.CategoryRepository;
 import com.example.crawlingdata.repositories.CityRepository;
+import com.example.crawlingdata.repositories.CrawlHistoryRepository;
 import com.example.crawlingdata.repositories.JobRepository;
 import com.example.crawlingdata.repositories.KeywordRepository;
 import com.example.crawlingdata.repositories.PositionRepository;
 import com.example.crawlingdata.repositories.SalaryRepository;
 import com.example.crawlingdata.repositories.WorkTypeRepository;
+import com.example.crawlingdata.responses.models.CrawlHistory;
 import com.example.crawlingdata.responses.models.JobItem;
 import com.example.crawlingdata.responses.models.Keyword;
 import com.example.crawlingdata.util.TopCvData;
@@ -33,6 +35,7 @@ public class TopCvSpider extends Crawler {
     private SalaryRepository salaryRepo;
     private WorkTypeRepository workTypeRepo;
     private KeywordRepository kwRepo;
+    private CrawlHistoryRepository historyRepo;
 
     public TopCvSpider(String keyword, String jobCategory, String companyField, int minSalary, int maxSalary, String location, int minimumExperience, int position, int workType) {
         super("https://www.topcv.vn", keyword, jobCategory, companyField, minSalary, maxSalary, location, minimumExperience, position, workType);
@@ -125,6 +128,8 @@ public class TopCvSpider extends Crawler {
 
     @Override
     public List<JobItem> crawl() {
+        CrawlHistory history = new CrawlHistory(this.getClass().getSimpleName(), super.getKeyword());
+        historyRepo.save(history);
         String formatUrl = getBaseUrl() + formatUrl(super.getKeyword(), super.getLocation(), super.getWorkType() + "", super.getJobCategory(), super.getCompanyField(), super.getPosition() + "", getMinSalary(), getMaxSalary(), 1);
         System.out.println("Url: " + formatUrl);
         kwRepo.save(new Keyword(super.getKeyword()));
@@ -154,7 +159,9 @@ public class TopCvSpider extends Crawler {
                     String salary = e.select(TopCvData.SALARY).first().text();
                     String logo = e.select(TopCvData.LOGO).first().attr("src");
                     String location = e.select(TopCvData.LOCATION).first().text();
-                    jobItems.add(new JobItem(jobName, companyName, logo, location, salary));
+                    var temp = new JobItem(jobName, companyName, logo, location, salary);
+                    temp.setHistory(history);
+                    jobItems.add(temp);
                 }
                 System.out.println("Crawling page: " + counter + " | " + "Jobs per page: " + select.size());
                 counter = counter + 1;
@@ -165,7 +172,7 @@ public class TopCvSpider extends Crawler {
             }
             System.out.println("total jobs: " + jobItems.size());
             
-            return jobRepo.saveAllAndFlush(jobItems);
+            return jobRepo.saveAll(jobItems);
             // return jobItems;
         } catch (Exception e) {
             e.printStackTrace();

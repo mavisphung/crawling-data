@@ -43,6 +43,7 @@ public class UserExcelExporter {
         createCell(row, 3, "Location", style);
         createCell(row, 4, "Salary", style);
         createCell(row, 5, "Logo", style);
+        createCell(row, 5, "Spider", style);
     }
      
     private void createCell(Row row, int columnCount, Object value, CellStyle style) {
@@ -76,6 +77,7 @@ public class UserExcelExporter {
             createCell(row, columnCount++, item.getLocation(), style);
             createCell(row, columnCount++, item.getSalary(), style);
             createCell(row, columnCount++, item.getCompanyLogo(), style);
+            createCell(row, columnCount++, item.getHistory().getSpiderName(), style);
         }
     }
      

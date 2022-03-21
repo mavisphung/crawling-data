@@ -14,6 +14,7 @@ import com.example.crawlingdata.crawlers.TopCvSpider;
 import com.example.crawlingdata.repositories.*;
 import com.example.crawlingdata.responses.JobResponse;
 import com.example.crawlingdata.responses.UserExcelExporter;
+import com.example.crawlingdata.responses.models.CrawlHistory;
 import com.example.crawlingdata.responses.models.JobItem;
 import com.example.crawlingdata.responses.models.WikiItem;
 import com.example.crawlingdata.util.DummyDatabase;
@@ -44,6 +45,7 @@ public class FetchApiController {
     private final SalaryRepository salaryRepo;
     private final WorkTypeRepository workTypeRepo;
     private final KeywordRepository kwRepo;
+    private final CrawlHistoryRepository historyRepo;
     private DummyDatabase db;
 
     public FetchApiController(
@@ -54,7 +56,8 @@ public class FetchApiController {
         PositionRepository positionRepo,
         SalaryRepository salaryRepo,
         WorkTypeRepository workTypeRepo,
-        KeywordRepository kwRepo
+        KeywordRepository kwRepo,
+        CrawlHistoryRepository historyRepo
     ) {
         this.web = web;
         jobList = new ArrayList<JobItem>();
@@ -65,6 +68,7 @@ public class FetchApiController {
         this.salaryRepo = salaryRepo;
         this.workTypeRepo = workTypeRepo;
         this.kwRepo = kwRepo;
+        this.historyRepo = historyRepo;
     }
 
     @GetMapping("/wiki/")
@@ -106,6 +110,7 @@ public class FetchApiController {
         topCvSpider.setSalaryRepo(salaryRepo);
         topCvSpider.setWorkTypeRepo(workTypeRepo);
         topCvSpider.setKwRepo(kwRepo);
+        topCvSpider.setHistoryRepo(historyRepo);
 
         OneTwoThreeJobSpider ottSpider = new OneTwoThreeJobSpider(keyword, category, companyField, 0, 100000, location, 2, 1, 1);
         ottSpider.setJobRepo(jobRepo);
@@ -115,22 +120,30 @@ public class FetchApiController {
         ottSpider.setSalaryRepo(salaryRepo);
         ottSpider.setWorkTypeRepo(workTypeRepo);
         ottSpider.setKwRepo(kwRepo);
+        ottSpider.setHistoryRepo(historyRepo);
+
         // List<JobItem> data1 = ottSpider.crawl();
         // List<JobItem> data = topCvSpider.crawl();
         ottSpider.crawl();
         topCvSpider.crawl();
-        var data = jobRepo.findAll();
+        // CrawlHistory topCvHistory = new CrawlHistory(topCvSpider.getClass().getName());
+        // topCvHistory.setJobs(data);
+        // CrawlHistory ottHisotry = new CrawlHistory(ottSpider.getClass().getName());
+        // ottHisotry.setJobs(data1);
+        // historyRepo.save(topCvHistory);
+        // historyRepo.save(ottHisotry);
+        var jobs = jobRepo.findAll();
         JobResponse response = new JobResponse();
-        if (data == null) {
+        if (jobs == null || jobs.isEmpty()) {
             response.setStatus(404);
             response.setTotal(0);
             response.setMessage("Failed to crawl data");
         }
         else {
             response.setStatus(200);
-            response.setTotal(data.size());
+            response.setTotal(jobs.size());
             response.setMessage("Get data successfully");
-            response.setData(data);
+            response.setData(jobs);
         }
         
         return response.getStatus() == 404 ? 

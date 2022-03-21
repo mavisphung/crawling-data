@@ -5,11 +5,13 @@ import java.util.List;
 
 import com.example.crawlingdata.repositories.CategoryRepository;
 import com.example.crawlingdata.repositories.CityRepository;
+import com.example.crawlingdata.repositories.CrawlHistoryRepository;
 import com.example.crawlingdata.repositories.JobRepository;
 import com.example.crawlingdata.repositories.KeywordRepository;
 import com.example.crawlingdata.repositories.PositionRepository;
 import com.example.crawlingdata.repositories.SalaryRepository;
 import com.example.crawlingdata.repositories.WorkTypeRepository;
+import com.example.crawlingdata.responses.models.CrawlHistory;
 import com.example.crawlingdata.responses.models.JobItem;
 import com.example.crawlingdata.responses.models.Keyword;
 import com.example.crawlingdata.util.OneTwoThreeJobData;
@@ -34,6 +36,7 @@ public class OneTwoThreeJobSpider extends Crawler {
     private SalaryRepository salaryRepo;
     private WorkTypeRepository workTypeRepo;
     private KeywordRepository kwRepo;
+    private CrawlHistoryRepository historyRepo;
 
     public OneTwoThreeJobSpider(String keyword, String jobCategory, String companyField, int minSalary, int maxSalary, String location, int minimumExperience, int position, int workType) {
         super("https://123job.vn/", keyword, jobCategory, companyField, minSalary, maxSalary, location, minimumExperience, position, workType);
@@ -59,6 +62,8 @@ public class OneTwoThreeJobSpider extends Crawler {
 
     @Override
     public List<JobItem> crawl() {
+        CrawlHistory history = new CrawlHistory(this.getClass().getSimpleName(), super.getKeyword());
+        historyRepo.save(history);
         String url = super.getBaseUrl() + formatUrl(super.getKeyword(), super.getLocation(), super.getWorkType() + "", super.getJobCategory(), super.getCompanyField(), super.getPosition() + "", getMinSalary(), getMaxSalary(), 1);
         System.out.println("Url: " + url);
         kwRepo.save(new Keyword(super.getKeyword()));
@@ -95,9 +100,11 @@ public class OneTwoThreeJobSpider extends Crawler {
                     } else {
                         salary = salaryEl.text();
                     }
-
+                    
+                    var tempo = new JobItem(jobName, companyName, logo, location, salary);
+                    tempo.setHistory(history);
                     // jobsList.add(new JobItem(jobName, companyName, logo, location, salary));
-                    resultsList.add(new JobItem(jobName, companyName, logo, location, salary));
+                    resultsList.add(tempo);
                 }
             }
 
@@ -130,7 +137,8 @@ public class OneTwoThreeJobSpider extends Crawler {
             // }
             
             System.out.println("Total jobs in list: " + resultsList.size());
-            return jobRepo.saveAllAndFlush(resultsList);
+            return jobRepo.saveAll(resultsList);
+            // return resultsList;
         } catch (SelectorParseException spe) {
             return new ArrayList<JobItem>();
         } catch (Exception e) {
