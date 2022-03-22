@@ -12,17 +12,21 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity(name = "crawl_histories")
 @Table
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class CrawlHistory {
 
@@ -36,6 +40,9 @@ public class CrawlHistory {
     @Column(name = "keyword")
     private String keyword;
 
+    @Column(name = "location")
+    private String location;
+
     @Column(name = "created_at")
     @CreationTimestamp
     private Timestamp createdAt;
@@ -46,10 +53,12 @@ public class CrawlHistory {
 
     @OneToMany(mappedBy = "history", fetch = FetchType.LAZY)
     @JsonManagedReference
+    @JsonIgnore
     private List<JobItem> jobs;
 
-    public CrawlHistory(String spiderName, String keyword) {
+    public CrawlHistory(String spiderName, String keyword, String location) {
         this.spiderName = spiderName;
         this.keyword = keyword;
+        this.location = location;
     }
 }

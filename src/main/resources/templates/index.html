@@ -17,11 +17,32 @@
     
     <!-- <a href="/api/wiki/" class="btn btn-primary">Fetch data</a> -->
     <a href="/api/export-excel/" class="btn btn-info">Export to excel</a>
-    
+    <button th:onclick="fetchAlias()" class="btn btn-primary">Fetch data</button>
     <div>
-        <input id="keyword" type="text" class="form-control" placeholder="Search" name="keyword" required>
+        <input id="keyword" type="text" class="form-control" placeholder="Search" name="keyword">
+        <select name="location" class="form-control" id="location">
+            <option value="no-location">Mặc định</option>
+            <option value="ha-noi">Hà Nội</option>
+            <option value="ho-chi-minh">Hồ Chí Minh</option>
+            <option value="da-nang">Đà Nẵng</option>
+        </select>
         <button th:onclick="fetchJobData()" class="btn btn-primary">Search</button>
     </div>
+
+    <div class="container">
+        <table id="tasks" class="table display">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Spider</th>
+                    <th>Keyword</th>
+                    <th>Location</th>
+                    <th>Created at</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
     <div class="container">
         <table id="table_id" class="table table-hover display">
             <thead>

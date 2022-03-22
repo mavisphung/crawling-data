@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface CityRepository extends JpaRepository<City, Integer> {
     
     City findByAliasContaining(String alias);
+
+    City findByAliasLike(String alias);
+
+    City findByNameLike(String alias);
 }

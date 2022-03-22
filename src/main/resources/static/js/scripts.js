@@ -1,4 +1,5 @@
 var datatable;
+var tasks;
 const clickMe = function() {
     const keyword = document.getElementById('keyword').value;
     let url = 'http://localhost:8087/api/find-job-v3?keyword=' + keyword;
@@ -28,9 +29,80 @@ const callAjax = () => {
     });
 }
 
+const fetchSpiders = function() {
+    console.log(`$.fn.dataTable.isDataTable('#tasks'): ${$.fn.dataTable.isDataTable('#tasks')}`)
+    if ($.fn.dataTable.isDataTable('#tasks')) {
+        tasks.destroy()
+        tasks = $('#tasks').DataTable({
+            ajax: {
+                url: 'http://localhost:8087/api/get-spiders', //'http://localhost:8087/api/crawl/123job?l=Yên Bái'
+                dataSrc: "data",
+                cache: false
+            },
+            columns: [
+                {
+                    data: 'id',
+                    width: '20%'
+                },
+                {
+                    data: 'spiderName',
+                    width: '20%'
+                },
+                {
+                    data: 'keyword',
+                    width: '20%'
+                },
+                {
+                    data: 'location',
+                    width: '20%'
+                },
+                {
+                    data: 'createdAt',
+                    width: '20%'
+                },
+            ]
+        });
+    }
+    else {
+        tasks = $('#tasks').DataTable({
+            ajax: {
+                url: 'http://localhost:8087/api/get-spiders', //'http://localhost:8087/api/crawl/123job?l=Yên Bái'
+                dataSrc: "data",
+                cache: false
+            },
+            retrieve: true,
+            columns: [
+                {
+                    data: 'id',
+                    width: '20%'
+                },
+                {
+                    data: 'spiderName',
+                    width: '20%'
+                },
+                {
+                    data: 'keyword',
+                    width: '20%'
+                },
+                {
+                    data: 'location',
+                    width: '20%'
+                },
+                {
+                    data: 'createdAt',
+                    width: '20%'
+                },
+            ]
+        });
+    }
+}
+
 const fetchJobData = function() {
     const keyword = document.getElementById('keyword').value;
-    let url = 'http://localhost:8087/api/find-job-v3?keyword=' + keyword;
+    // const location = $('#location :selected').value || $('#location :selected').value == 'no-location' ? $('#location :selected').value : 'ho-chi-minh';
+    const location = $('#location :selected').text() || $('#location :selected').value == 'no-location' ? $('#location :selected').text() : 'ho-chi-minh';
+    let url = 'http://localhost:8087/api/find-job-v3?keyword=' + keyword + '&location=' + location;
+    console.log("Url: " + url)
     console.log(`$.fn.dataTable.isDataTable('#table_id'): ${$.fn.dataTable.isDataTable('#table_id')}`)
     if ($.fn.dataTable.isDataTable('#table_id')) {
         datatable.destroy()
@@ -96,7 +168,27 @@ const fetchJobData = function() {
             ]
         });
     }
+
+    fetchSpiders();
 }
 
 const exportExcel = function() {
 }
+
+const fetchAlias = function() {
+    const url = 'http://localhost:8087/api/add-data';
+    $.ajax(url, {
+        success: (data) => {
+            alert('Fetch alias successfully')
+        },
+        error: (jqxhr, textStatus, error) => {
+            console.log(error)
+            console.log(textStatus)
+        }
+    });
+}
+
+$(document).ready(function () {
+    fetchSpiders()
+    fetchAlias()
+});

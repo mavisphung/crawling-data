@@ -5,7 +5,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +16,7 @@ import com.example.crawlingdata.crawlers.OneTwoThreeJobSpider;
 import com.example.crawlingdata.crawlers.TopCvSpider;
 import com.example.crawlingdata.repositories.*;
 import com.example.crawlingdata.responses.JobResponse;
+import com.example.crawlingdata.responses.SpiderDTO;
 import com.example.crawlingdata.responses.UserExcelExporter;
 import com.example.crawlingdata.responses.models.CrawlHistory;
 import com.example.crawlingdata.responses.models.JobItem;
@@ -122,28 +126,31 @@ public class FetchApiController {
         ottSpider.setKwRepo(kwRepo);
         ottSpider.setHistoryRepo(historyRepo);
 
-        // List<JobItem> data1 = ottSpider.crawl();
-        // List<JobItem> data = topCvSpider.crawl();
-        ottSpider.crawl();
-        topCvSpider.crawl();
+        List<JobItem> data1 = ottSpider.crawl();
+        List<JobItem> data = topCvSpider.crawl();
+        // ottSpider.crawl();
+        // topCvSpider.crawl();
+        if (data == null)
+            data = new ArrayList<>();
+        data.addAll(data1);
         // CrawlHistory topCvHistory = new CrawlHistory(topCvSpider.getClass().getName());
         // topCvHistory.setJobs(data);
         // CrawlHistory ottHisotry = new CrawlHistory(ottSpider.getClass().getName());
         // ottHisotry.setJobs(data1);
         // historyRepo.save(topCvHistory);
         // historyRepo.save(ottHisotry);
-        var jobs = jobRepo.findAll();
+        // var jobs = jobRepo.findAll();
         JobResponse response = new JobResponse();
-        if (jobs == null || jobs.isEmpty()) {
+        if (data == null || data.isEmpty()) {
             response.setStatus(404);
             response.setTotal(0);
             response.setMessage("Failed to crawl data");
         }
         else {
             response.setStatus(200);
-            response.setTotal(jobs.size());
+            response.setTotal(data.size());
             response.setMessage("Get data successfully");
-            response.setData(jobs);
+            response.setData(data);
         }
         
         return response.getStatus() == 404 ? 
@@ -154,7 +161,8 @@ public class FetchApiController {
 
     @GetMapping("/add-data")
     public String doTask() {
-        db = new DummyDatabase(cateRepo, cityRepo, positionRepo, salaryRepo, workTypeRepo);
+        if (db == null)
+            db = new DummyDatabase(cateRepo, cityRepo, positionRepo, salaryRepo, workTypeRepo);
         return "Added data";
     }
 
@@ -222,5 +230,17 @@ public class FetchApiController {
         // result.setStatus(200);
         // result.setMessage("Exported data to excel file");
         // return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/get-spiders")
+    public Map<String, List<SpiderDTO>> getSpiders() {
+        var result = historyRepo.findAll();
+        var spiders = result.stream().map(item -> {
+            SpiderDTO spider = new SpiderDTO(item.getId(), item.getSpiderName(), item.getKeyword(), item.getLocation(), item.getCreatedAt());
+            return spider;
+        }).collect(Collectors.toList());
+        var map = new HashMap<String, List<SpiderDTO>>();
+        map.put("data", spiders);
+        return map;
     }
 }

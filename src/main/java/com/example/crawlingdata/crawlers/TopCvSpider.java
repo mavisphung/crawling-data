@@ -79,7 +79,7 @@ public class TopCvSpider extends Crawler {
         if (location != null) {
             var formattedLocation = location.replaceAll("\\s+", "-");
             System.out.println(formattedLocation);
-            var city = cityRepo.findByAliasContaining(formattedLocation);
+            var city = cityRepo.findByNameLike(location);
             System.out.println("City: " + city.getAlias());
             locationPart = "-tai-" + city.getAlias().replaceAll("\\s+", "-");
             filters.put("2", city.getId());
@@ -128,7 +128,7 @@ public class TopCvSpider extends Crawler {
 
     @Override
     public List<JobItem> crawl() {
-        CrawlHistory history = new CrawlHistory(this.getClass().getSimpleName(), super.getKeyword());
+        CrawlHistory history = new CrawlHistory(this.getClass().getSimpleName(), super.getKeyword(), super.getLocation());
         historyRepo.save(history);
         String formatUrl = getBaseUrl() + formatUrl(super.getKeyword(), super.getLocation(), super.getWorkType() + "", super.getJobCategory(), super.getCompanyField(), super.getPosition() + "", getMinSalary(), getMaxSalary(), 1);
         System.out.println("Url: " + formatUrl);

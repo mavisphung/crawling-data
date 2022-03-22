@@ -62,7 +62,7 @@ public class OneTwoThreeJobSpider extends Crawler {
 
     @Override
     public List<JobItem> crawl() {
-        CrawlHistory history = new CrawlHistory(this.getClass().getSimpleName(), super.getKeyword());
+        CrawlHistory history = new CrawlHistory(this.getClass().getSimpleName(), super.getKeyword(), super.getLocation());
         historyRepo.save(history);
         String url = super.getBaseUrl() + formatUrl(super.getKeyword(), super.getLocation(), super.getWorkType() + "", super.getJobCategory(), super.getCompanyField(), super.getPosition() + "", getMinSalary(), getMaxSalary(), 1);
         System.out.println("Url: " + url);
