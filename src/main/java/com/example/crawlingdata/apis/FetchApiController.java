@@ -243,4 +243,22 @@ public class FetchApiController {
         map.put("data", spiders);
         return map;
     }
+
+    @GetMapping("/chart-jobs")
+    public HashMap<String, List<JobItem>> getJobsFilledChart() {
+        HashMap<String, List<JobItem>> chart = new HashMap<>();
+        List<CrawlHistory> histories = historyRepo.findAll();
+
+        for (CrawlHistory history : histories) {
+            if (chart.containsKey(history.getKeyword())) {
+                var tempList = chart.get(history.getKeyword());
+                tempList.addAll(history.getJobs());
+                chart.put(history.getKeyword(), tempList);
+            } else {
+                chart.put(history.getKeyword(), history.getJobs());
+            }
+        }
+
+        return chart;
+    }
 }

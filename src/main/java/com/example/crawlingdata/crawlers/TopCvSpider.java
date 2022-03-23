@@ -79,7 +79,7 @@ public class TopCvSpider extends Crawler {
         if (location != null) {
             var formattedLocation = location.replaceAll("\\s+", "-");
             System.out.println(formattedLocation);
-            var city = cityRepo.findByNameLike(location);
+            var city = cityRepo.findByAliasLike(location);
             System.out.println("City: " + city.getAlias());
             locationPart = "-tai-" + city.getAlias().replaceAll("\\s+", "-");
             filters.put("2", city.getId());
